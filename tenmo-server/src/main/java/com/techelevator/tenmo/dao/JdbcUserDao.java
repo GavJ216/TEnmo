@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,11 +9,13 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 @Component
 public class JdbcUserDao implements UserDao {
 
@@ -104,5 +107,25 @@ public class JdbcUserDao implements UserDao {
         user.setActivated(true);
         user.setAuthorities("USER");
         return user;
+    }
+
+    @Override
+   public Account getAccountById(int id) {
+    BigDecimal balance = null;
+    Account account = null;
+    String sql = "select account_id, user_id, balance from account where user_id = ?;";
+    SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+    if(results.next()) {
+        account = mapRowToAccount(results);
+    }
+    return account;
+    }
+
+    private Account mapRowToAccount(SqlRowSet rs) {
+        Account account = new Account();
+        account.setAccountId(rs.getInt("account_id"));
+        account.setUserId(rs.getInt("user_id"));
+        account.setBalance(rs.getBigDecimal("balance"));
+        return account;
     }
 }
