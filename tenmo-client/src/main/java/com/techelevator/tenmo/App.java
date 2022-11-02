@@ -1,10 +1,15 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transaction;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+
+import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class App {
 
@@ -104,7 +109,29 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		
+		Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the username of the account you want to transfer to.");
+        String userInput = scanner.nextLine();
+        Account account = accountService.getAccountMatchingUsername(userInput);
+        if(account != null) {
+            if(userInput.equalsIgnoreCase(currentUser.getUser().getUsername())) {
+                System.out.println("You cannot send yourself money!");
+            }
+            else {
+                System.out.println("How much do you want to send?");
+                String choice = scanner.nextLine();
+                Account sender = accountService.getAccount(currentUser.getUser().getId());
+                Transaction transaction = new Transaction(sender,account);
+                BigDecimal bigDecimal = new BigDecimal(choice);
+                transaction.sendMoney(bigDecimal);
+                accountService.update(sender);
+                accountService.update(account);
+            }
+        }
+        else {
+            System.out.println("Username not found!");
+        }
+
 	}
 
 	private void requestBucks() {

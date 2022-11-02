@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +40,21 @@ public class TenmoController {
         } else {
             return account;
         }
+    }
+
+    @PreAuthorize("permitAll")
+    @RequestMapping(path = "/accounts/username/{username}", method = RequestMethod.GET)
+    public Account accountByUsername(@PathVariable String username) {
+
+
+
+        return userDao.getAccountByUsername(username);
+    }
+
+    @RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
+    public BigDecimal update(@Valid @RequestBody Account account, @PathVariable int id) {
+        BigDecimal newBalance = userDao.updateBalance(account.getBalance(), id);
+        return newBalance;
     }
 
 }
