@@ -64,6 +64,10 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
+        else {
+            transferService.setAuthToken(currentUser.getToken());
+            accountService.setAuthToken(currentUser.getToken());
+        }
     }
 
     private void mainMenu() {

@@ -25,5 +25,5 @@ public interface UserDao {
 
      BigDecimal updateBalance(BigDecimal newBalance, int userId);
 
-     Transfer createTransfer(Transfer transfer);
+     void createTransfer(Transfer transfer);
 }
