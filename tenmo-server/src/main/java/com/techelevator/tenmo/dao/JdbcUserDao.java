@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferInfo;
 import com.techelevator.tenmo.model.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -111,7 +112,6 @@ public class JdbcUserDao implements UserDao {
     }
 
 
-// ALL METHODS BELOW THIS LINE MUST HAVE TESTS WRITTEN ===================================================================
 
 
     @Override
@@ -148,6 +148,45 @@ public class JdbcUserDao implements UserDao {
             account = mapRowToAccount(results);
         }
         return account;
+    }
+
+    @Override
+    public List<TransferInfo> getTransferInfoByUsername(String username) {
+        List<TransferInfo> transferInfoList = new ArrayList<>();
+        String sql = "select username, amount from transfer " +
+                "join account on account.account_id = transfer.account_to " +
+                "join tenmo_user on tenmo_user.user_id = account.user_id " +
+                "where username = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
+        while (results.next()) {
+            transferInfoList.add(mapRowToTransferInfo(results));
+        }
+        return transferInfoList;
+    }
+
+    @Override
+    public List<TransferInfo> getTransferInfo(int currentUserAccountId) {
+        List<TransferInfo> transferInfoList = new ArrayList<>();
+        String sql = "select username, amount from transfer " +
+                "left join account on account.account_id = transfer.account_to " +
+                "join tenmo_user on tenmo_user.user_id = account.user_id " +
+                "where account_from = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, currentUserAccountId);
+        while (results.next()) {
+            transferInfoList.add(mapRowToTransferInfo(results));
+        }
+        return transferInfoList;
+    }
+
+    @Override
+    public List<User> getAllUsers(){
+        List<User> users = new ArrayList<>();
+        String sql = "select username from tenmo_user;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while(results.next()){
+            users.add(mapRowToUsername(results));
+        }
+        return users;
     }
 //    @Override
 //    public Transfer createTransfer(Transfer transfer){
@@ -189,13 +228,36 @@ public class JdbcUserDao implements UserDao {
         return transfer;
     }
 
+<<<<<<< HEAD
     protected Account mapRowToAccount(SqlRowSet rs) {
+=======
+    private TransferInfo mapRowToTransferInfo(SqlRowSet rs) {
+        TransferInfo transferInfo = new TransferInfo();
+        transferInfo.setUsername(rs.getString("username"));
+        transferInfo.setAmount(rs.getBigDecimal("amount"));
+        return transferInfo;
+    }
+
+    private Account mapRowToAccount(SqlRowSet rs) {
+>>>>>>> 4d68da2dd994e8f89eb6997727aa44edb10449f0
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUserId(rs.getInt("user_id"));
         account.setBalance(rs.getBigDecimal("balance"));
         return account;
     }
+
+    private User mapRowToUsername(SqlRowSet rs) {
+        User user = new User();
+        user.setUsername(rs.getString("username"));
+        user.setId(0);
+        user.setPassword("hh");
+        user.setActivated(true);
+        user.setAuthorities("USER");
+        return user;
+    }
+
+
 
 
 }
