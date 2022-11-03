@@ -23,7 +23,7 @@ public class Transfer {
     }
 
     public void setTransferTypeId(int transferTypeId){
-        this.transferId = transferTypeId;
+        this.transferTypeId = transferTypeId;
     }
 
     public int getTransferStatusId(){

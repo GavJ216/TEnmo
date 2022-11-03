@@ -145,43 +145,33 @@ public class JdbcUserDao implements UserDao {
         }
         return account;
     }
-    @Override
-    public Transfer createTransfer(Transfer transfer){
-        Transfer newTransfer = null;
-        String sql = "insert into transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                "values (?,?,?,?,?,?) " +
-                "returning transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, Transfer.class, transfer.getTransferId(), transfer.getTransferTypeId(),
-                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-        if(results.next()) {
-            newTransfer =mapRowToTransfer(results);
-        }
-        return newTransfer;
-
-    }
-//
 //    @Override
 //    public Transfer createTransfer(Transfer transfer){
 //        Transfer newTransfer = null;
 //        String sql = "insert into transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
 //                "values (?,?,?,?,?,?) " +
 //                "returning transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount;";
-//        newTransfer = jdbcTemplate.queryForObject(sql, Transfer.class, transfer.getTransferId(), transfer.getTransferTypeId(),
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, Transfer.class, transfer.getTransferId(), transfer.getTransferTypeId(),
 //                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+//        if(results.next()) {
+//            newTransfer =mapRowToTransfer(results);
+//        }
 //        return newTransfer;
 //
 //    }
 
-//    @Override
-//    public void createTransfer(Transfer transfer){
-//        Transfer newTransfer = null;
-//        String sql = "insert into transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-//                "values (?,?,?,?,?,?); ";
-//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, Transfer.class, transfer.getTransferId(), transfer.getTransferTypeId(),
-//                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-//
-//
-//    }
+    @Override
+    public void createTransfer(Transfer transfer) {
+        String sql = "insert into transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                "values (?,?,?,?,?) " +
+                "returning transfer_id;";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, transfer.getTransferTypeId(),
+                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+        System.out.println(transferId);
+
+    }
+
+
 
 
     private Transfer mapRowToTransfer(SqlRowSet rs) {
