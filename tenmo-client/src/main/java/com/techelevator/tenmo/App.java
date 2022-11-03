@@ -1,9 +1,6 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transaction;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -16,6 +13,7 @@ public class App {
     private static final String API_BASE_URL = "http://localhost:8080/";
 
     private AccountService accountService = new AccountService();
+    private TransferService transferService = new TransferService();
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
@@ -65,6 +63,10 @@ public class App {
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
             consoleService.printErrorMessage();
+        }
+        else {
+            transferService.setAuthToken(currentUser.getToken());
+            accountService.setAuthToken(currentUser.getToken());
         }
     }
 
@@ -126,6 +128,7 @@ public class App {
                 transaction.sendMoney(bigDecimal);
                 accountService.update(sender);
                 accountService.update(account);
+                transferService.createTransfer(transaction.getTransfer());
             }
         }
         else {

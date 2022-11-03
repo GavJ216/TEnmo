@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -148,6 +149,45 @@ public class JdbcUserDao implements UserDao {
         }
         return account;
     }
+//    @Override
+//    public Transfer createTransfer(Transfer transfer){
+//        Transfer newTransfer = null;
+//        String sql = "insert into transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+//                "values (?,?,?,?,?,?) " +
+//                "returning transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount;";
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, Transfer.class, transfer.getTransferId(), transfer.getTransferTypeId(),
+//                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+//        if(results.next()) {
+//            newTransfer =mapRowToTransfer(results);
+//        }
+//        return newTransfer;
+//
+//    }
+
+    @Override
+    public void createTransfer(Transfer transfer) {
+        String sql = "insert into transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                "values (?,?,?,?,?) " +
+                "returning transfer_id;";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, transfer.getTransferTypeId(),
+                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+        System.out.println(transferId);
+
+    }
+
+
+
+
+    private Transfer mapRowToTransfer(SqlRowSet rs) {
+        Transfer transfer = new Transfer();
+        transfer.setTransferId(rs.getInt("transfer_id"));
+        transfer.setTransferTypeId(rs.getInt("transfer_type_id"));
+        transfer.setTransferStatusId(rs.getInt("transfer_status_id"));
+        transfer.setAccountFrom(rs.getInt("account_from"));
+        transfer.setAccountTo(rs.getInt("account_to"));
+        transfer.setAmount(rs.getBigDecimal("amount"));
+        return transfer;
+    }
 
     protected Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
@@ -156,4 +196,6 @@ public class JdbcUserDao implements UserDao {
         account.setBalance(rs.getBigDecimal("balance"));
         return account;
     }
+
+
 }
