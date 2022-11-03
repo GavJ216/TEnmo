@@ -3,6 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,6 +56,11 @@ public class TenmoController {
     public BigDecimal update(@Valid @RequestBody Account account, @PathVariable int id) {
         BigDecimal newBalance = userDao.updateBalance(account.getBalance(), id);
         return newBalance;
+    }
+
+    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
+    public void createTransfer(@Valid @RequestBody Transfer transfer) {
+        userDao.createTransfer(transfer);
     }
 
 }
