@@ -4,6 +4,7 @@ import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferInfo;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,4 +64,18 @@ public class TenmoController {
         userDao.createTransfer(transfer);
     }
 
+    @RequestMapping(path = "/transferInfos/{username}", method = RequestMethod.GET)
+    public List<TransferInfo> getTransferInfosByUsername(@PathVariable String username) {
+        return userDao.getTransferInfoByUsername(username);
+    }
+
+    @RequestMapping(path = "/transferInfos/1/{currentUserAccountId}", method = RequestMethod.GET)
+    public List<TransferInfo> getTransferInfos(@PathVariable int currentUserAccountId) {
+        return userDao.getTransferInfo(currentUserAccountId);
+    }
+
+    @RequestMapping(path = "/users/", method = RequestMethod.GET)
+    public List<User> getUsers() {
+        return userDao.getAllUsers();
+    }
 }
