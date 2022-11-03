@@ -130,7 +130,7 @@ public class JdbcUserDao implements UserDao {
     public BigDecimal updateBalance(BigDecimal newBalance, int userId) {
         String sql = "update account " +
                 "set balance = ? " +
-                "where user_id = ?" +
+                "where user_id = ? " +
                 "returning balance;";
        BigDecimal updatedBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, newBalance, userId);
 
