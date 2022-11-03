@@ -109,6 +109,10 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
+
+// ALL METHODS BELOW THIS LINE MUST HAVE TESTS WRITTEN ===================================================================
+
+
     @Override
    public Account getAccountById(int id) {
     BigDecimal balance = null;
@@ -145,7 +149,7 @@ public class JdbcUserDao implements UserDao {
         return account;
     }
 
-    private Account mapRowToAccount(SqlRowSet rs) {
+    protected Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUserId(rs.getInt("user_id"));
