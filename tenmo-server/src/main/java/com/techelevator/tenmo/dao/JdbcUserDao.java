@@ -282,6 +282,25 @@ public class JdbcUserDao implements UserDao {
         return username;
     }
 
+    @Override
+    public boolean updateTransferTypeAndStatus(int newTransferStatusId, int transferId) {
+        boolean updateSuccessful = false;
+        Transfer transfer = null;
+        String sql = "update transfer " +
+                "set transfer_status_id = ? " +
+                "where transfer_id = ?" +
+                "returning transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, newTransferStatusId, transferId);
+        if (results.next()) {
+            transfer = mapRowToTransfer(results);
+        }
+
+        if (transfer != null) {
+            updateSuccessful = true;
+        }
+        return updateSuccessful;
+    }
+
 
 
 }

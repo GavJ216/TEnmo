@@ -46,6 +46,18 @@ public class Transaction {
         }
     }
 
+    public void createTransferRequest(BigDecimal requestAmount) {
+        BigDecimal minRequest = new BigDecimal(1);
+        if(requestAmount.compareTo(minRequest)<0){
+            System.out.println("Your request cannot be less than $1");
+        }
+        transfer.setAmount(requestAmount);
+        transfer.setTransferTypeId(1);
+        transfer.setTransferStatusId(1);
+        transfer.setAccountFrom(sender.getAccountId());
+        transfer.setAccountTo(receiver.getAccountId());
+    }
+
     public void setTransferAccountFrom() {
        transfer.setAccountFrom(sender.getUserId());
     }
@@ -53,6 +65,10 @@ public class Transaction {
     public void setTransferAccountTo(){
 
          transfer.setAccountTo(receiver.getUserId());
+    }
+
+    public void approveTransfer() {
+        transfer.setTransferStatusId(2);
     }
 
 

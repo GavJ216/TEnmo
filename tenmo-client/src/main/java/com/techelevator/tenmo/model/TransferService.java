@@ -34,6 +34,23 @@ public class TransferService {
 
     }
 
+    public boolean updateTransferTypeAndStatus(Transfer transfer) {
+        boolean updateSuccessful = false;
+        HttpEntity<Transfer> entity = makeTransferEntity(transfer);
+        try {
+            restTemplate.put(API_BASE_URL, entity, Transfer.class);
+            updateSuccessful = true;
+
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+            //TODO change catch body
+        }
+
+        return updateSuccessful;
+    }
+
+//
+
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
