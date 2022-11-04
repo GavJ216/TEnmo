@@ -221,9 +221,34 @@ public class App {
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-        System.out.println();
-        System.out.println("THIS WAS OPTIONAL AND WE'RE NOT DOING IT!");
-	}
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("All usernames are:");
+        User[] list = transferInfoService.getAllUsers();
+        for (User user : list) {
+            System.out.println(user.getUsername());
+        }
+        System.out.println("Choose a user to request from: ");
+        String userInput = scanner.nextLine();
+        Account requestAccount = accountService.getAccountMatchingUsername(userInput);
+//        Transfer requestTransfer = new Transfer();
+        if (requestAccount != null) {
+            if(userInput.equalsIgnoreCase(currentUser.getUser().getUsername())) {
+                System.out.println("You cannot request money from yourself!");
+            }
+            else {
+                System.out.println("How much do you want to request?");
+                String choice = scanner.nextLine();
+                Account sender = accountService.getAccount(currentUser.getUser().getId());
+                Transaction transaction = new Transaction(sender,requestAccount);
+                BigDecimal bigDecimal = new BigDecimal(choice);
+                transaction.createTransferRequest(bigDecimal);
+
+                transferService.createTransfer(transaction.getTransfer());
+            }
+        } else {
+            System.out.println("Username not found!");
+        }
+    }
+
 
 }

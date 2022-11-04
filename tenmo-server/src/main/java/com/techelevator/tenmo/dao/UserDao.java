@@ -37,4 +37,6 @@ public interface UserDao {
     public Transfer getTransferByTransferId(int transferId);
 
     public User getUserNameByAccountId(int accountId);
+
+    public boolean updateTransferTypeAndStatus(int newTransferStatusId, int transferId);
 }

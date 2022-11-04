@@ -89,4 +89,9 @@ public class TenmoController {
     public User getUserByUsernameId(@PathVariable int accountId) {
         return userDao.getUserNameByAccountId(accountId);
     }
+
+    @RequestMapping(path = "/transfers/", method = RequestMethod.PUT)
+    public boolean updateTransferTypeAndStatus(@RequestBody Transfer transfer) {
+        return userDao.updateTransferTypeAndStatus(transfer.getTransferStatusId(), transfer.getTransferId());
+    }
 }
