@@ -111,6 +111,9 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
+
+
+
     @Override
    public Account getAccountById(int id) {
     BigDecimal balance = null;
@@ -127,7 +130,7 @@ public class JdbcUserDao implements UserDao {
     public BigDecimal updateBalance(BigDecimal newBalance, int userId) {
         String sql = "update account " +
                 "set balance = ? " +
-                "where user_id = ?" +
+                "where user_id = ? " +
                 "returning balance;";
        BigDecimal updatedBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, newBalance, userId);
 
@@ -225,6 +228,7 @@ public class JdbcUserDao implements UserDao {
         return transfer;
     }
 
+
     private TransferInfo mapRowToTransferInfo(SqlRowSet rs) {
         TransferInfo transferInfo = new TransferInfo();
         transferInfo.setUsername(rs.getString("username"));
@@ -233,6 +237,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     private Account mapRowToAccount(SqlRowSet rs) {
+
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUserId(rs.getInt("user_id"));
