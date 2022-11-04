@@ -25,9 +25,13 @@ public class Transaction {
         return transfer;
     }
 
-
+//firstBigDecimal.compareTo(secondBigDecimal) >= 0 // ">="
     //method
     public void sendMoney(BigDecimal amount) {
+        BigDecimal test = new BigDecimal(1);
+        if(amount.compareTo(test)<0){
+            System.out.println("Can't send a negative or 0 amount.");
+        }
         if (sender.getBalance().compareTo(amount) > 0) {
             sender.setBalance(sender.getBalance().subtract(amount));
             receiver.setBalance(receiver.getBalance().add(amount));

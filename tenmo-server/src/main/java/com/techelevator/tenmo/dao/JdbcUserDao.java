@@ -203,6 +203,8 @@ public class JdbcUserDao implements UserDao {
 //
 //    }
 
+
+
     @Override
     public void createTransfer(Transfer transfer) {
         String sql = "insert into transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
@@ -255,6 +257,30 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
+    @Override
+    public Transfer getTransferByTransferId(int transferId) {
+        Transfer transfer = new Transfer();
+        String sql = "select transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount " +
+                "FROM transfer " +
+                "where transfer_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+        if (results.next()) {
+            transfer = mapRowToTransfer(results);
+        }
+        return transfer;
+    }
+
+    public User getUserNameByAccountId(int accountId){
+        User username = null;
+        String sql = "select username from tenmo_user " +
+                "join account on tenmo_user.user_id = account.user_id " +
+                "where account_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        if(results.next()) {
+            username = mapRowToUsername(results);
+        }
+        return username;
+    }
 
 
 

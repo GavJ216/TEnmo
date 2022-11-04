@@ -77,6 +77,7 @@ public class AccountService {
         return new HttpEntity<>(headers);
     }
 
+
     private HttpEntity<Account> makeAuctionEntity(Account account) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

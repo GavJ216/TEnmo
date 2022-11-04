@@ -33,4 +33,8 @@ public interface UserDao {
     public List<TransferInfo> getTransferInfo(int currentUserAccountId);
 
     public List<User> getAllUsers();
+
+    public Transfer getTransferByTransferId(int transferId);
+
+    public User getUserNameByAccountId(int accountId);
 }
