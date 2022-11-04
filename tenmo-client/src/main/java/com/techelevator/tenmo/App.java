@@ -17,6 +17,7 @@ public class App {
     private TransferService transferService = new TransferService();
     private TransferInfoService transferInfoService = new TransferInfoService();
 
+
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
@@ -105,7 +106,7 @@ public class App {
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
         Scanner scanner = new Scanner(System.in);
-        System.out.println("1) View all transactions or 2)View Transactions from a specific username?");
+        System.out.println("1) View all transactions or  2)View Transactions from a specific username? or  3)View Transaction by Transaction ID.");
         System.out.println("Select one:");
         String choice = scanner.nextLine();
 
@@ -132,6 +133,46 @@ public class App {
             }
             else {
                 System.out.println("Username not found!");
+            }
+        }
+        else if(choice.equalsIgnoreCase("3")){
+            System.out.println("Enter a transfer ID to view the transaction: ");
+            String transferIdSearch = scanner.nextLine();
+            int parsedString = Integer.parseInt(transferIdSearch);
+            Transfer transfer = transferService.getTransferByTransferId(parsedString);
+
+//            if(transfer.getAccountFrom() != currentUser.getUser().getId()){
+//                System.out.println("You can only view your own transfers.");
+//            }
+            if(transfer != null){
+                System.out.println("----------------------------");
+                System.out.println("Transfer Details");
+                System.out.println("----------------------------");
+
+                System.out.println("Id: " + transfer.getTransferId());
+                System.out.println("From: " + transferService.getUsernameByAccountId(transfer.getAccountFrom()).getUsername());
+                System.out.println("To: " + transferService.getUsernameByAccountId(transfer.getAccountTo()).getUsername());
+
+                if(transfer.getTransferStatusId() == 1){
+                    System.out.println("Status: Pending");
+                }
+                if(transfer.getTransferStatusId() == 2){
+                    System.out.println("Status: Approved");
+                }
+                if(transfer.getTransferStatusId() == 3){
+                    System.out.println("Status: Rejected");
+                }
+
+
+                if(transfer.getTransferTypeId() == 1){
+                    System.out.println("Type: Request");
+                }
+
+                if(transfer.getTransferTypeId() == 2){
+                    System.out.println("Type: Send");
+                }
+
+                System.out.println("Amount: $" + transfer.getAmount());
             }
         }
         else {
