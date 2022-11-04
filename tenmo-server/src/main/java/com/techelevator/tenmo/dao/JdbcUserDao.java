@@ -228,9 +228,7 @@ public class JdbcUserDao implements UserDao {
         return transfer;
     }
 
-<<<<<<< HEAD
-    protected Account mapRowToAccount(SqlRowSet rs) {
-=======
+
     private TransferInfo mapRowToTransferInfo(SqlRowSet rs) {
         TransferInfo transferInfo = new TransferInfo();
         transferInfo.setUsername(rs.getString("username"));
@@ -239,7 +237,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     private Account mapRowToAccount(SqlRowSet rs) {
->>>>>>> 4d68da2dd994e8f89eb6997727aa44edb10449f0
+
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUserId(rs.getInt("user_id"));
